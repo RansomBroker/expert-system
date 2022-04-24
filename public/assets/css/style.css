@@ -1,0 +1,19 @@
+.vh-100 {
+    height: 100vh;
+}
+
+.bg-danger-50{
+    background-color: #ff8082 !important;
+}
+
+.bg-success-50{
+    background-color: #3daf7a !important;
+}
+
+.bg-blue-gradient{
+    background: linear-gradient(to left, #50ACC7, #10586E);
+}
+
+.nav-link:hover {
+    color: #ff792b !important;
+}
