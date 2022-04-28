@@ -52,10 +52,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'Home_Controller';
 $route['home'] = 'Home_Controller';
 $route['authors'] = "Authors_Controller";
+// will combine later start
+$route['authors/insert-author-profile'] = "Authors_Controller/insert_author";
+$route['authors/insert-media'] = "Authors_Controller/insert_media_pub";
+$route['authors/insert-pub'] = "Authors_Controller/insert_pub";
+// will combine later end
 $route['login'] = 'Auth_Controller/login';
 $route['logout'] = 'Auth_Controller/logout';
 $route['dashboard'] = 'Admin_Controller';
 $route['insert-knowledge-field'] = 'Admin_Controller/insert_knowledge_field';
 $route['insert-word-dict'] = 'Admin_Controller/insert_word_dict';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
