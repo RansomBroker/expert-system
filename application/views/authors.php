@@ -15,6 +15,21 @@
 <body>
 <?php $this->load->view("/includes/navbar.php");?>
 
+<div class="container-fluid px-5 mt-5">
+    <?if ($this->session->flashdata('insert_data_success')):?>
+        <div class="w-100 border-success border border-2 rounded bg-success-50 p-2 d-flex justify-content-between">
+            <p class="m-0 text-success"><?= $this->session->flashdata('insert_data_success')?></p>
+            <a href="<?= base_url('authors')?>"><i class="fa fa-times" aria-hidden="true"></i></a>
+        </div>
+    <?endif;?>
+    <?if ($this->session->flashdata('insert_data_failed')):?>
+        <div class="w-100 border-danger border border-2 rounded bg-danger-50 p-2 d-flex justify-content-between">
+            <p class="m-0 text-danger"><?= $this->session->flashdata('insert_data_failed')?></p>
+            <a href="<?= base_url('authors')?>"><i class="fa fa-times" aria-hidden="true"></i></a>
+        </div>
+    <?endif;?>
+</div>
+
 <div class="container-fluid row gap-5 m-0 my-5">
     <!-- res -->
     <div class="col-lg-6 col-sm-6 card shadow border-0">
@@ -106,7 +121,12 @@
     <?php if (!$is_author_exist && isset($_GET['id'])):?>
         <div class="col-lg-5 col-sm-6 card shadow border-0 align-self-start h-96 align-items-center justify-content-center show-data">
             <p><?= $author_name?>. Belum terdapat di database</p>
-            <button class="btn btn-primary shadow">Simpan Data Ke Database</button>
+            <a href="<?= base_url("authors/insert-data?id=").$_GET['id']?>" class="btn btn-primary shadow">Simpan Data Ke Database</a>
+        </div>
+    <?php elseif ($is_author_exist):?>
+        <div class="col-lg-5 col-sm-6 card shadow border-0 align-self-start h-96 align-items-center justify-content-center show-data">
+            <p><?= $author_name?>. Sudah Terdaftar Ke database</p>
+            <button class="btn btn-success shadow">Lihat Detail Author</button>
         </div>
     <?php endif;?>
 </div>

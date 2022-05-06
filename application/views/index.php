@@ -14,5 +14,14 @@
 </head>
 <body>
     <?php $this->load->view("/includes/navbar.php");?>
+
+    <div class="container-fluid px-5 mt-3">
+        <h1 class="fs-4">List Author di database</h1>
+    </div>
+
+    <div class="container-fluid mt-3">
+
+    </div>
+
 </body>
 </html>
