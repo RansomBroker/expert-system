@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-blue-gradient d-flex shadow p-0">
+<nav class="navbar navbar-expand-lg navbar-light bg-blue-gradient d-flex shadow p-0 py-2">
     <div class="container-fluid">
         <a class="navbar-brand text-white" href="<?=base_url()?>">
             <img src="<?= base_url('assets/img/brand_sinta.png') ?>" width="24" height="24" alt="brand_sinta.png"><small> Sinta Indonesia</small>
@@ -27,9 +27,5 @@
                 <?php endif;?>
             </ul>
         </div>
-        <form action="<?= base_url("authors")?>" METHOD="GET" class="d-flex ms-4 p-2">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
-            <button class="btn btn-primary" type="submit">Search</button>
-        </form>
     </div>
 </nav>

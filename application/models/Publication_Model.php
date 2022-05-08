@@ -23,4 +23,21 @@ class Publication_Model extends CI_Model
             return false;
         }
     }
+
+    public function get_author_publication($author_id, $number, $offset)
+    {
+        return $this->db
+            ->where('id_author', $author_id)
+            ->get($this->table, $number, $offset)
+            ->result_array();
+    }
+
+    public function author_total_publication_data($author_id)
+    {
+        return $this->db
+            ->select('judul, posisi_penulis, total_penulis, tahun_publikasi')
+            ->where('id_author', $author_id)
+            ->get($this->table)
+            ->num_rows();
+    }
 }

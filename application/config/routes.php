@@ -53,11 +53,12 @@ $route['default_controller'] = 'Home_Controller';
 $route['home'] = 'Home_Controller';
 $route['authors'] = "Authors_Controller";
 $route['authors/insert-data'] = "Authors_Controller/insert_data";
+$route['authors/detail/(:num)'] = "Authors_Controller/detail/$1";
+$route['authors/detail/(:num)/calculate_media'] = "Authors_Controller/calculate_media/$1";
 $route['login'] = 'Auth_Controller/login';
 $route['logout'] = 'Auth_Controller/logout';
 $route['dashboard'] = 'Admin_Controller';
 $route['insert-knowledge-field'] = 'Admin_Controller/insert_knowledge_field';
 $route['insert-word-dict'] = 'Admin_Controller/insert_word_dict';
-
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

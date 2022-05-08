@@ -16,6 +16,7 @@ class Authors_Controller extends CI_Controller
         $this->load->model('Scopus_Model');
         $this->load->model('Publication_Model');
         $this->load->model('Citation_Model');
+        $this->load->library('pagination');
     }
 
     public function index()
@@ -113,10 +114,51 @@ class Authors_Controller extends CI_Controller
         $this->load->view('authors', $data);
     }
 
+    public function detail($author_id)
+    {
+        $pagination = new CI_Pagination();
+        $config['base_url'] = base_url("authors/detail/$author_id/");
+        $config['total_rows'] = $this->Publication_Model->author_total_publication_data($author_id);
+        $config['per_page'] = 5;
+        $config['use_page_numbers'] = TRUE;
+        $config['page_query_string'] = TRUE;
+        $config['reuse_query_string'] = TRUE;
+        $config['query_string_segment'] = 'page';
+        $offset = isset($_GET["page"]) != NULL ? $_GET["page"]: '1';
+
+        // pagintaion view
+        $config['attributes'] = array('class' => 'page-link');
+        $config['next_link'] = '&gt';
+        $config['prev_link'] = '&lt';
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['prev_tag_open'] = "<li class='page_item'>";
+        $config['prev_tag_close'] = "</li>";
+        $config['next_tag_open'] = "<li class='page-item'>";
+        $config['next_tag_close'] = "</li>";
+        $config['first_tage_open'] = "<li class='page-item disabled'>";
+        $config['first_tage_close'] = "<li class='page-item disabled'>";
+        $config['cur_tag_open'] = "<li class='page-item active'><span class='page-link'>";
+        $config['cur_tag_close'] = "</li>";
+        $config['cur_tag_close'] = "</span></li>";
+        $config['full_tag_close'] = "</ul>";
+
+        $pagination->initialize($config);
+
+        $data['sinta_data'] = $this->Sinta_Model->get_author_media_sinta($author_id);
+        $data['scopus_data'] = $this->Scopus_Model->get_author_media_scopus($author_id);
+        $data['per_page'] = $config['per_page'];
+        $data['curr_page'] =isset($_GET["page"]) != NULL ? $_GET["page"]: '1';
+        $data['total_data'] = $this->Publication_Model->author_total_publication_data($author_id);
+        $data['pagination_link'] = $pagination->create_links();
+        $data['publication_data'] = $this->Publication_Model->get_author_publication($author_id, $config['per_page'], ($offset * $config['per_page'])- $config['per_page']);
+        $data['author_data'] = $this->Author_Model->get_author_detail($author_id);
+        $this->load->view('detail', $data);
+    }
+
     public function insert_data()
     {
         /*
-        *  Todo Here
+        *  TODO
         *  1. insert author
         *  2. insert media
         *  3. insert publication gs(all jurnal wos, and scopus get coverd into gs)
@@ -142,8 +184,10 @@ class Authors_Controller extends CI_Controller
         }
 
         if (!$publication_exist) {
+            // get author name
+            $author_name = $this->Author_Model->get_author_name($author_id)[0]->author_name;
             // insert publication
-            $insert_publication = $this->insert_pub($author_id);
+            $insert_publication = $this->insert_pub($author_id);;
         }
 
         if (!$citaion_exist) {
@@ -193,20 +237,12 @@ class Authors_Controller extends CI_Controller
         // make alias name
         $name_length = count(explode(" ",strtolower($author_profile[0]['author_name'])));
         $author_last_name = array(explode(" ",strtolower($author_profile[0]['author_name']))[$name_length-1]);
-        $name_explode = explode(" ",strtolower($author_profile[0]['author_name']));
-        $initial = array();
-
-        for ($i = 0; $i < ($name_length > 1 ? $name_length-1 : $name_length); $i++) {
-            array_push($initial, $name_explode[$i][0]);
-        }
-        array_push($initial, " ");
-        $author_alias = implode(array_merge($initial, $author_last_name));
 
         $data = array(
             'id_author' => $author_id,
             'author_img_url' => $author_profile[0]['author_img'][0],
             'author_name' => $author_profile[0]['author_name'],
-            'author_alias' => str_replace(' ', '', $author_alias),
+            'author_alias' => $author_last_name[0],
             'author_affiliation' => $author_profile[0]['author_affiliate'],
             'author_field' => (isset($author_profile[0]['author_department']) ? $author_profile[0]['author_department'] : null)
         );
@@ -333,12 +369,13 @@ class Authors_Controller extends CI_Controller
                 $total  = 0;
                 $author_position = 0;
                 foreach ($author as $k => $author_name) {
-                    $total += 1;
-                    // replace all white space and combine word
-                    if ($this->Author_Model->check_author_position(str_replace(' ', '', $author_name))) {
-                        $author_position += $k+1;
-                    } else {
-                        $author_position += 0;
+                    $total += 1;;
+                    foreach (explode(" ", $author_name) as $l => $data_name) {
+                        if ($this->Author_Model->check_author_position($data_name)) {
+                            $author_position += $k+1;
+                        } else {
+                            $author_position += 0;
+                        }
                     }
                 }
                 $author_data[] = array(
@@ -348,8 +385,7 @@ class Authors_Controller extends CI_Controller
             }
         }
 
-        // print_r($author_data);
-
+        /*var_dump($author_data);*/
         /*
          * meresturktur data agar dapat di masukan ke database
          * */
@@ -373,7 +409,6 @@ class Authors_Controller extends CI_Controller
         }else {
             return false;
         }
-
     }
 
     public function insert_citation($author_id)
@@ -400,7 +435,7 @@ class Authors_Controller extends CI_Controller
             array(
                 'id_author' => $author_id,
                 'id_jenis_media_publikasi' => 4,
-                'sitasi' => ($wos_citation != "-" ? $wos_citation : null)
+                'sitasi' => ($wos_citation != "-" ? $wos_citation : 0)
             )
         );
 
