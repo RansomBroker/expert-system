@@ -27,7 +27,7 @@ class Scopus_Model extends CI_Model
     public function get_author_media_scopus($author_id)
     {
         return $this->db
-            ->select('q1, ,q2, q3, q4, undefined, article, conference')
+            ->select('q1, q2, q3, q4, undefined, article, conference')
             ->where('author_id', $author_id)
             ->get($this->table)
             ->result_array();

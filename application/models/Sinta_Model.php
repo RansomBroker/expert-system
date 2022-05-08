@@ -28,7 +28,7 @@ class Sinta_Model extends CI_Model
     public function get_author_media_sinta($author_id)
     {
         return $this->db
-            ->select('s1, s2, s3, s4, s5, s6,  uncategorized')
+            ->select('s1, s2, s3, s4, s5, s6')
             ->where('author_id', $author_id)
             ->get($this->table)
             ->result_array();

@@ -14,6 +14,20 @@
 <body>
     <?php $this->load->view("/includes/navbar.php");?>
 
+    <div class="container-fluid px-5 mt-5">
+        <?if ($this->session->flashdata('calculate_success')):?>
+            <div class="w-100 border-success border border-2 rounded bg-success-50 p-2 d-flex justify-content-between">
+                <p class="m-0 text-success"><?= $this->session->flashdata('calculate_success')?></p>
+            </div>
+        <?endif;?>
+        <?if ($this->session->flashdata('calculate_failed')):?>
+            <div class="w-100 border-danger border border-2 rounded bg-danger-50 p-2 d-flex justify-content-between">
+                <p class="m-0 text-danger"><?= $this->session->flashdata('calculate_failed')?></p>
+            </div>
+        <?endif;?>
+    </div>
+
+
     <div class="container-fluid row px-5 mt-5 gap-4">
         <?php foreach ($author_data as $data):?>
             <!-- author detail -->
@@ -73,6 +87,33 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <!-- calculate media-->
+                        <?php if($media_quality_exist > 0):?>
+                            <table class="table table-borderless table-sm mt-2">
+                                <thead class="table-light">
+                                <tr>
+                                    <th class="fw-normal">Sinta</th>
+                                    <th class="fw-normal">Scopus</th>
+                                    <th class="fw-normal">Conference & article</th>
+                                    <th class="fw-normal">total(average)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <?php foreach ($media_quality_data as $data):?>
+                                        <td><?= $data['sinta']?></td>
+                                        <td><?= $data['scopus']?></td>
+                                        <td><?= $data['confer_article']?></td>
+                                        <td><?= $data['total']?></td>
+                                    <?php endforeach;?>
+                                </tr>
+                                </tbody>
+                            </table>
+                        <?php else:?>
+                            <div class="w-100 d-flex justify-content-center mt-4">
+                                <a href="<?= base_url($this->uri->uri_string()."/calculate_media")?>" class="btn btn-primary">Hitung Kualitas Media</a>
+                            </div>
+                        <?php endif;?>
                     </div>
                 </div>
                 <!-- citation -->

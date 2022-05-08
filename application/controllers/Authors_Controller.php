@@ -17,6 +17,7 @@ class Authors_Controller extends CI_Controller
         $this->load->model('Publication_Model');
         $this->load->model('Citation_Model');
         $this->load->library('pagination');
+        $this->load->model('Media_Quality_Model');
     }
 
     public function index()
@@ -144,6 +145,8 @@ class Authors_Controller extends CI_Controller
 
         $pagination->initialize($config);
 
+        $data['media_quality_exist'] = $this->Media_Quality_Model->check_media_quality($author_id);
+        $data['media_quality_data'] = $this->Media_Quality_Model->get_media_quality($author_id);
         $data['sinta_data'] = $this->Sinta_Model->get_author_media_sinta($author_id);
         $data['scopus_data'] = $this->Scopus_Model->get_author_media_scopus($author_id);
         $data['per_page'] = $config['per_page'];
@@ -153,6 +156,78 @@ class Authors_Controller extends CI_Controller
         $data['publication_data'] = $this->Publication_Model->get_author_publication($author_id, $config['per_page'], ($offset * $config['per_page'])- $config['per_page']);
         $data['author_data'] = $this->Author_Model->get_author_detail($author_id);
         $this->load->view('detail', $data);
+    }
+
+    public function calculate_media($author_id)
+    {
+        /*
+         * TODO
+         *  1. calculate sinta and scopus
+         *  2. count average
+         *  3. save into db
+         * */
+        $sinta_data =  $this->Sinta_Model->get_author_media_sinta($author_id);
+        $scopus_data = $this->Scopus_Model->get_author_media_scopus($author_id);
+
+        // calculate sinta
+        $sinta_total_data = 0.0;
+        $sinta_percentage = 30;
+        foreach ($sinta_data as $i => $data) {
+            foreach ($data as $j => $score) {
+                $sum = $score * ( $sinta_percentage /100 );
+                $sinta_total_data += $sum;
+                $sinta_percentage -= 5;
+            }
+        }
+
+        // calculate scopus
+        $scopus_total_data = 0.0;
+        $scopus_percentage = 40;
+        foreach ($scopus_data as $data) {
+            foreach ($data as $j => $score) {
+                if ($j == 'undefined' || $j == 'article' || $j == 'conference') {
+                } else {
+                    $sum = $score * ($scopus_percentage / 100);
+                    $scopus_total_data += $sum;
+                    $scopus_percentage -= 10;
+                }
+            }
+        }
+
+        //calculate article and conference
+        $confer_aritcle_total_data = 0.0;
+        $confer_aritcle_percentage = 70;
+        foreach ($scopus_data as $data) {
+            foreach ($data as $j => $score) {
+                if ($j == 'article' || $j == 'conference') {
+                    $sum = $score * ($confer_aritcle_percentage / 100);
+                    $confer_aritcle_total_data += $sum;
+                    $confer_aritcle_percentage -= 40;
+                }
+            }
+        }
+
+        $sinta_total = round($sinta_total_data*(30 / 100), 4);
+        $scopus_total = round($scopus_total_data * (50 / 100), 4);
+        $confer_article_total = round($confer_aritcle_total_data * (20 / 100), 4);
+
+        $avg = ($sinta_total + $scopus_total + $confer_article_total) / 3;
+
+        $data = array(
+            'id_author' => $author_id,
+            'sinta' => $sinta_total,
+            'scopus' => $scopus_total,
+            'confer_article' => $confer_article_total,
+            'total' => round($avg, 4)
+        );
+
+        if ($this->Media_Quality_Model->insert_data($data)) {
+            $this->session->set_flashdata('calculate_success', "berhasil menghitung kualitas media");
+        } else {
+            $this->session->set_flashdata('calculate_failed', "gaga menghitung kualitas media");
+        }
+
+        redirect("authors/detail/$author_id");
     }
 
     public function insert_data()
