@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ffaf12fe9fa27239f1e2ebf82a6f300c",
+    "content-hash": "58d3a1706253dd89ebba4bf062a56de1",
     "packages": [
         {
             "name": "fabpot/goutte",
