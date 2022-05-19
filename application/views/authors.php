@@ -15,18 +15,18 @@
 <?php $this->load->view("/includes/navbar.php");?>
 
 <div class="container-fluid px-5 mt-5">
-    <?if ($this->session->flashdata('insert_data_success')):?>
+    <?php if ($this->session->flashdata('insert_data_success')):?>
         <div class="w-100 border-success border border-2 rounded bg-success-50 p-2 d-flex justify-content-between">
             <p class="m-0 text-success"><?= $this->session->flashdata('insert_data_success')?></p>
             <a href="<?= base_url('authors')?>"><i class="fa fa-times" aria-hidden="true"></i></a>
         </div>
-    <?endif;?>
-    <?if ($this->session->flashdata('insert_data_failed')):?>
+    <?php endif;?>
+    <?php if ($this->session->flashdata('insert_data_failed')):?>
         <div class="w-100 border-danger border border-2 rounded bg-danger-50 p-2 d-flex justify-content-between">
             <p class="m-0 text-danger"><?= $this->session->flashdata('insert_data_failed')?></p>
             <a href="<?= base_url('authors')?>"><i class="fa fa-times" aria-hidden="true"></i></a>
         </div>
-    <?endif;?>
+    <?php endif;?>
 </div>
 
 <div class="container-fluid row gap-5 m-0 my-5">
@@ -46,7 +46,7 @@
                     <p class="m-0 text-success"><i>Search Result for:</i> "<?= $_GET['q'];?>"</p>
                     <a href="<?= base_url('authors')."?q=&page="?>"><i class="fa fa-times" aria-hidden="true"></i></a>
                 </div>
-            <?endif;?>
+            <?php endif;?>
             <!-- pagination top -->
             <nav aria-label="Page navigation paginate" class="mt-3">
                 <ul class="pagination pagination-md justify-content-end">
@@ -55,7 +55,7 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <?$search = isset($_GET['q']) ? $_GET['q'] : "";?>
+                    <?php $search = isset($_GET['q']) ? $_GET['q'] : "";?>
                     <?php foreach($pagination["page_list"] as $page_list):?>
                             <li class="page-item  <?= $pagination['active_page']['page'] == $page_list ? "active": ""?>
                         <?php if(strlen($page_list) > 0):?>"><a class="page-link" href="<?=base_url('authors')."?q=".$search."&page=$page_list"?>"><?= $page_list?></a></li>
@@ -101,7 +101,7 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <?$search = isset($_GET['q']) ? $_GET['q'] : "";?>
+                    <?php $search = isset($_GET['q']) ? $_GET['q'] : "";?>
                     <?php foreach($pagination["page_list"] as $page_list):?>
                         <li class="page-item  <?= $pagination['active_page']['page'] == $page_list ? "active": ""?>
                         <?php if(strlen($page_list) > 0):?>"><a class="page-link" href="<?=base_url('authors')."?q=".$search."&page=$page_list"?>"><?= $page_list?></a></li>

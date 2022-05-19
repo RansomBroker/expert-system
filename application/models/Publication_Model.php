@@ -40,4 +40,23 @@ class Publication_Model extends CI_Model
             ->get($this->table)
             ->num_rows();
     }
+
+    public function count_first_author($author_id)
+    {
+        return $this->db
+            ->where('id_author', $author_id)
+            ->where('posisi_penulis', 1)
+            ->get($this->table)
+            ->num_rows();
+    }
+
+    public function count_next_author($author_id)
+    {
+        return $this->db
+            ->where('id_author', $author_id)
+            ->where('posisi_penulis >', 1)
+            ->get($this->table)
+            ->num_rows();
+    }
+
 }
