@@ -15,16 +15,16 @@
     <?php $this->load->view("/includes/navbar.php");?>
 
     <div class="container-fluid px-5 mt-5">
-        <?if ($this->session->flashdata('calculate_success')):?>
+        <?php if ($this->session->flashdata('calculate_success')):?>
             <div class="w-100 border-success border border-2 rounded bg-success-50 p-2 d-flex justify-content-between">
                 <p class="m-0 text-success"><?= $this->session->flashdata('calculate_success')?></p>
             </div>
-        <?endif;?>
-        <?if ($this->session->flashdata('calculate_failed')):?>
+        <?php endif;?>
+        <?php if ($this->session->flashdata('calculate_failed')):?>
             <div class="w-100 border-danger border border-2 rounded bg-danger-50 p-2 d-flex justify-content-between">
                 <p class="m-0 text-danger"><?= $this->session->flashdata('calculate_failed')?></p>
             </div>
-        <?endif;?>
+        <?php endif;?>
     </div>
 
 
@@ -117,28 +117,66 @@
                     </div>
                 </div>
                 <!-- citation -->
-                <div class="col-lg-3 col-md-3 card shadow border">
-                    <div class="card-body">
-                        <p>Coming Soon...</p>
+                <div class="col-lg-3 col-md-3 card shadow border p-0">
+                    <div class="card-header">
+                        Data Sitasi
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-borderless table-sm">
+                            <tbody>
+                                <tr>
+                                    <td><img src="https://sinta.kemdikbud.go.id/assets/img/scopus_logo.png" alt="scopus" class="img-fluid"></td>
+                                    <td><?=$citation_data[0]['data_sitasi']?></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://sinta.kemdikbud.go.id/assets/img/scholar_logo.png" alt="gs" class="img-fluid"></td>
+                                    <td><?=$citation_data[1]['data_sitasi']?></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://sinta.kemdikbud.go.id/assets/img/wos_logo.png" alt="wos" class="img-fluid" width="64px"></td>
+                                    <td><?=$citation_data[2]['data_sitasi']?></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <!-- author sinta, author position, media quality -->
-                <div class="col-lg-2 col-md-2 card shadow border">
-                    <div class="card-body">
-                        <p>Coming Soon...</p>
+                <!-- posisi penulis -->
+                <div class="col-lg-8 col-md-6 card shadow border p-0">
+                    <div class="card-header">
+                        Posisi Penulis
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-borderless table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>Penulis Utama</td>
+                                    <td>:</td>
+                                    <td><?= $count_author_first_pos?> publikasi</td>
+                                    <td><?= $percent_author_first_post?>% <small class="text-muted"><i>of total publication</i></small</td>
+                                </tr>
+                                <tr>
+                                    <td>Penulis berikutnya</td>
+                                    <td>:</td>
+                                    <td><?= $count_author_next_pos?> publikasi</td>
+                                    <td><?= $percent_author_next_post?>% <small class="text-muted"><i>of total publication</i></small></td>
+                                </tr>
+                                <tr>
+                                    <?php if ($author_position_exist > 0):?>
+                                        <td>Skor Penulis</td>
+                                        <td>:</td>
+                                        <td><?= $author_pos_data[0]['score']?></td>
+                                    <?php else:?>
+                                        <td colspan="4" class="text-center">
+                                            <a href="<?= base_url($this->uri->uri_string()."/calculate_author_pos")?>" class="btn btn-primary">Hitung Kualitas Media</a>
+                                        </td>
+                                    <?php endif;?>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 card shadow border">
-                    <div class="card-body">
-                        <p>Coming Soon...</p>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-2 card shadow border">
-                    <div class="card-body">
-                        <p>Coming Soon...</p>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-2 card shadow border">
+                <div class="col-lg-3 col-md-6 card shadow border">
                     <div class="card-body">
                         <p>Coming Soon...</p>
                     </div>

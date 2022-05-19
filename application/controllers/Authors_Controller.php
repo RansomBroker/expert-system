@@ -18,6 +18,7 @@ class Authors_Controller extends CI_Controller
         $this->load->model('Citation_Model');
         $this->load->library('pagination');
         $this->load->model('Media_Quality_Model');
+        $this->load->model('Author_Position_Model');
     }
 
     public function index()
@@ -145,6 +146,14 @@ class Authors_Controller extends CI_Controller
 
         $pagination->initialize($config);
 
+        $data['author_pos_data'] = $this->Author_Position_Model->get_data($author_id);
+        $data['count_author_first_pos'] = $this->Publication_Model->count_first_author($author_id);
+        $data['count_author_next_pos'] = $this->Publication_Model->count_next_author($author_id);
+        $data['percent_author_first_post'] = round(($data['count_author_first_pos']/$config['total_rows'])*100, 2);
+        $data['percent_author_next_post'] = round(($data['count_author_next_pos']/$config['total_rows'])*100, 2);
+        $data['author_position_exist'] = $this->Author_Position_Model->check_author_position_exist($author_id);
+        $data['citation_data'] = $this->Citation_Model->get_citation($author_id);
+        $data['citation_exist'] = $this->Citation_Model->citation_exist($author_id);
         $data['media_quality_exist'] = $this->Media_Quality_Model->check_media_quality($author_id);
         $data['media_quality_data'] = $this->Media_Quality_Model->get_media_quality($author_id);
         $data['sinta_data'] = $this->Sinta_Model->get_author_media_sinta($author_id);
@@ -224,9 +233,28 @@ class Authors_Controller extends CI_Controller
         if ($this->Media_Quality_Model->insert_data($data)) {
             $this->session->set_flashdata('calculate_success', "berhasil menghitung kualitas media");
         } else {
-            $this->session->set_flashdata('calculate_failed', "gaga menghitung kualitas media");
+            $this->session->set_flashdata('calculate_failed', "gagal menghitung kualitas media");
         }
 
+        redirect("authors/detail/$author_id");
+    }
+
+    public function calculate_author_pos($author_id)
+    {
+        $first_author_pos_percent = round($this->Publication_Model->count_first_author($author_id)*(70/100), 2);
+        $next_author_pos_percent = round($this->Publication_Model->count_next_author($author_id)*(30/100), 2);
+        $avg_data = round(($first_author_pos_percent + $next_author_pos_percent )/ 2, 2);
+
+        $data = array(
+            'id_author' => $author_id,
+            'score' => $avg_data
+        );
+
+        if ($this->Author_Position_Model->insert_data($data)) {
+            $this->session->set_flashdata('calculate_success', "berhasil menghitung posisi penulis");
+        } else {
+            $this->session->set_flashdata('calculate_failed', "gaga menghitung posisi penulis");
+        }
         redirect("authors/detail/$author_id");
     }
 
@@ -500,17 +528,17 @@ class Authors_Controller extends CI_Controller
             array(
                 'id_author' => $author_id,
                 'id_jenis_media_publikasi' => 1,
-                'sitasi' => $scopus_citation
+                'data_sitasi' => $scopus_citation
             ),
             array(
                 'id_author' => $author_id,
                 'id_jenis_media_publikasi' => 2,
-                'sitasi' => $gs_citation
+                'data_sitasi' => $gs_citation
             ),
             array(
                 'id_author' => $author_id,
                 'id_jenis_media_publikasi' => 4,
-                'sitasi' => ($wos_citation != "-" ? $wos_citation : 0)
+                'data_sitasi' => ($wos_citation != "-" ? $wos_citation : 0)
             )
         );
 

@@ -55,6 +55,7 @@ $route['authors'] = "Authors_Controller";
 $route['authors/insert-data'] = "Authors_Controller/insert_data";
 $route['authors/detail/(:num)'] = "Authors_Controller/detail/$1";
 $route['authors/detail/(:num)/calculate_media'] = "Authors_Controller/calculate_media/$1";
+$route['authors/detail/(:num)/calculate_author_pos'] = "Authors_Controller/calculate_author_pos/$1";
 $route['login'] = 'Auth_Controller/login';
 $route['logout'] = 'Auth_Controller/logout';
 $route['dashboard'] = 'Admin_Controller';
